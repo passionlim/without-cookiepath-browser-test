@@ -1,0 +1,23 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Test page to check IE which would lost JSESSIONID Cookie</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+    IFRAME 창<br/>
+    <iframe id="contents" width="100%" height="300px"></iframe>
+    <script>
+		var iframe =  document.getElementById("contents");
+
+	
+	    var matches = /i=(\d+)/.exec(location.search);
+	    var interval = 1000;
+	    if ( matches ) {
+	    		interval = matches[1] || 1000;
+	    }
+    		
+	    iframe.src="/redirect/0/landing?i="+interval;
+    </script>
+</body>
+</html>

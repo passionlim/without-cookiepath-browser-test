@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Test page to check IE which would lost JSESSIONID Cookie</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+    페이지를 이동합니다.<br/>
+    
+    <p>Previous Session Id: <span id="previousId" th:text="${previousSessionId}"></span></p>
+    <p>Submitted Session Id: <span id="submittedId" th:text="${submittedSessionId}"></span></p>
+    <p>Current Session Id: <span id="currentId" th:text="${currentSessionId}"></span></p>
+   	<p>Alert Message : <span id="message"></span></p>
+   	
+	<script >
+	/*<![CDATA[*/
+		var previousId =  document.getElementById("previousId").innerText || "";
+		var submittedId =  document.getElementById("submittedId").innerText || "";
+		var currentId =  document.getElementById("currentId").innerText || "";
+		var message =  document.getElementById("message").innerText || "";
+		
+	    var matches = /i=(\d+)/.exec(location.search);
+	    var interval = 1000;
+	    if ( matches ) {
+	    		interval = matches[1];
+	    }
+
+	    setTimeout(function() {
+	    		if (submittedId == "" && currentId != "" ) {
+	    			message.innertText = "The session id has been started.";
+	    		}
+    		
+	    		if ( previousId != "" && submittedId == "" ) {
+	    			message.innertText = "The session id has been changed.";
+	    			return;
+	    		}
+	    		
+	    		var curValue = 0; 
+	    		var matches = /([0-9]+)\/landing/.exec(location.href);
+	    		if ( matches ) {
+	    			curValue = parseInt(matches[0]);
+	    		} 
+	    		
+	    		var nextUrl = "/redirect/" + (++curValue) + "/landing";
+	    		
+	    		var search = "?";
+	    		if ( location.search ) {
+	    			search = location.search
+	    		}
+	    		
+	    		// append & at the end of the query string.
+	    		if ( /^\?\S+[^&]$/.test(search)) search += "&";
+	    				
+	    		// replace previousSessionId with currentId
+	    		if ( ! /previousId=[^&]*/.test(search)) search += "previousId=";
+	    		search = search.replace(/previousId=[^&]*/g,"previousId="+currentId);
+	    		
+	    		location.href = nextUrl + search;
+	    } , interval);
+    /*]]>*/</script>
+</body>
+</html>
