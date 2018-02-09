@@ -5,58 +5,63 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-    페이지를 이동합니다.<br/>
-    
+    Current page number is <span id="currentNo" ></span> .<br/>
+
     <p>Previous Session Id: <span id="previousId" th:text="${previousSessionId}"></span></p>
     <p>Submitted Session Id: <span id="submittedId" th:text="${submittedSessionId}"></span></p>
     <p>Current Session Id: <span id="currentId" th:text="${currentSessionId}"></span></p>
    	<p>Alert Message : <span id="message"></span></p>
-   	
-	<script >
-	/*<![CDATA[*/
-		var previousId =  document.getElementById("previousId").innerText || "";
-		var submittedId =  document.getElementById("submittedId").innerText || "";
-		var currentId =  document.getElementById("currentId").innerText || "";
-		var message =  document.getElementById("message").innerText || "";
-		
+
+		<script >/*<![CDATA[*/
+		(function(){
+			var previousId =  document.getElementById("previousId").innerText || "";
+			var submittedId =  document.getElementById("submittedId").innerText || "";
+			var currentId =  document.getElementById("currentId").innerText || "";
+
 	    var matches = /i=(\d+)/.exec(location.search);
-	    var interval = 1000;
+	    var interval = 0;
 	    if ( matches ) {
-	    		interval = matches[1];
+    		interval = matches[1];
 	    }
 
-	    setTimeout(function() {
-	    		if (submittedId == "" && currentId != "" ) {
-	    			message.innertText = "The session id has been started.";
-	    		}
-    		
-	    		if ( previousId != "" && submittedId == "" ) {
-	    			message.innertText = "The session id has been changed.";
-	    			return;
-	    		}
-	    		
-	    		var curValue = 0; 
-	    		var matches = /([0-9]+)\/landing/.exec(location.href);
-	    		if ( matches ) {
-	    			curValue = parseInt(matches[0]);
-	    		} 
-	    		
+
+			var curValue = 0;
+			var matches = /([0-9]+)\/landing/.exec(location.href);
+			if ( matches ) {
+				curValue = parseInt(matches[0]);
+			}
+
+			document.getElementById("currentNo").innerHTML = ""+curValue;
+
+			if (submittedId == "" && currentId != "" ) {
+				document.getElementById("message").innerHTML = "The new session id has been started.";
+			}
+
+			if ( previousId != "" && submittedId == "" ) {
+				document.getElementById("message").innerHTML = "The recent session id has been changed.";
+				return;
+			}
+
+			if ( interval > 0 ) {
+		    setTimeout(function() {
 	    		var nextUrl = "/redirect/" + (++curValue) + "/landing";
-	    		
+
 	    		var search = "?";
 	    		if ( location.search ) {
 	    			search = location.search
 	    		}
-	    		
+
 	    		// append & at the end of the query string.
 	    		if ( /^\?\S+[^&]$/.test(search)) search += "&";
-	    				
+
 	    		// replace previousSessionId with currentId
 	    		if ( ! /previousId=[^&]*/.test(search)) search += "previousId=";
 	    		search = search.replace(/previousId=[^&]*/g,"previousId="+currentId);
-	    		
+
 	    		location.href = nextUrl + search;
-	    } , interval);
+	    	} , interval);
+			}
+		})();
     /*]]>*/</script>
 </body>
 </html>
