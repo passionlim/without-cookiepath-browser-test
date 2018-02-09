@@ -3,10 +3,10 @@
 ## Sample 을
 
 ## Running a web server
-----
-run_no_path.sh : Path 없이 Cookie 를 생성하는 경우. JSESSIONID 쿠키 유실 발생함
-run_root_path.sh : ROOT(/) Path로 Cookie 를 생성하는 경우
-----
+~~~shell
+run_no_path.sh # Path 없이 Cookie 를 생성하는 경우. JSESSIONID 쿠키 유실 발생함
+run_root_path.sh # ROOT(/) Path로 Cookie 를 생성하는 경우. 브라우저 쿠키 유실 발생하지 않음.
+~~~
 
 ## 테스트 결과
  IE 에서는 Cookie 유실이 좀 더 빨리 일어남을 확인할 수 있음.
